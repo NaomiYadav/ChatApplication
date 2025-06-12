@@ -1,12 +1,20 @@
-import { Router } from 'express';
-import { ChatController } from '../controllers/chatController';
+import express from 'express';
+import Message from '../models/message';
 
-const router = Router();
-const chatController = new ChatController();
+const router = express.Router();
 
-export const setChatRoutes = (app) => {
-    app.use('/api/chat', router);
+// Get all messages
+router.get('/messages', async (req, res) => {
+  const messages = await Message.find();
+  res.json(messages);
+});
 
-    router.post('/send', chatController.sendMessage.bind(chatController));
-    router.get('/messages', chatController.getMessages.bind(chatController));
-};
+// Post a new message
+router.post('/messages', async (req, res) => {
+  const { sender, content } = req.body;
+  const message = new Message({ sender, content });
+  await message.save();
+  res.status(201).json(message);
+});
+
+export default router;

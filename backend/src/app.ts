@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { setChatRoutes } from './routes/chatRoutes';
+import chatRoutes from './routes/chatRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,7 +15,7 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch(err => console.error('MongoDB connection error:', err));
 
 // Set up routes
-setChatRoutes(app);
+app.use('/api/chat', chatRoutes);
 
 // Start the server
 app.listen(PORT, () => {
